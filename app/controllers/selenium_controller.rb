@@ -18,7 +18,7 @@ class SeleniumController < ApplicationController
   end
 
   def specs
-  	render json: get_specs
+  	render json: ::RakeHelper.get_selenium_specs
   end
 
   private
@@ -39,11 +39,7 @@ class SeleniumController < ApplicationController
   	render json: {"error":"specs need to be passed in as an array"}, status: 400 and return unless requested_specs.respond_to?(:to_a)
 
   	requested_specs.each do |spec|
-  		render json: {"error":"#{spec} is not a valid spec"}, status: 400 and return unless get_specs.keys.any? { |valid_spec| valid_spec == spec }
+  		render json: {"error":"#{spec} is not a valid spec"}, status: 400 and return unless ::RakeHelper.get_commands.any? { |valid_spec| valid_spec == spec }
   	end
-  end
-
-  def get_specs
-  	::RakeHelper.get_selenium_specs
   end
 end

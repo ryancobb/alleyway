@@ -20,7 +20,7 @@ namespace :selenium do
 				describe_text = file.match(/describe "(.*)",/)[1]
 				test_name = test.match(/selenium_tests\/specs\/#{feature}\/(\w*)_spec.rb\z/)[1]
 
-				desc "#{feature} - #{describe_text}"
+				desc "#{describe_text}"
 				RSpec::Core::RakeTask.new(:"#{test_name}", :job_guid) do |t, task_args|
 					t.pattern = "#{root_dir}/#{feature}/#{test_name}_spec.rb"
 					t.rspec_opts ="--format CustomFormatter > selenium_tests/reports/#{task_args[:job_guid]}.json"
