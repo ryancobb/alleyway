@@ -1,6 +1,6 @@
 require_relative '../spec_helper'
 
-describe "uptime verification", :type => :feature do
+describe "uptime verification2", :type => :feature do
 
   it "Able to login" do
   	visit 'http://www.facebook.com'

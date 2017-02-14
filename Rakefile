@@ -2,10 +2,7 @@
 # for example lib/tasks/capistrano.rake, and they will automatically be available to Rake.
 
 require_relative 'config/application'
-require 'ci/reporter/rake/rspec'
 require 'rspec/core/rake_task'
-
-ENV["CI_REPORTS"] = "selenium_tests/reports/"
 
 namespace :selenium do
 	root_dir = 'selenium_tests/specs'
@@ -14,24 +11,20 @@ namespace :selenium do
 	features.each do |feature|
 		feature = feature.match(/selenium_tests\/specs\/(\w*)\/\z/)[1]
 
-		# Create top level feature rake tasks to run all children, for example :selenium:firefly
-		RSpec::Core::RakeTask.new(:"#{feature}") do |t|
-			t.pattern = "#{root_dir}/#{feature}/*_spec.rb"
-		end
-
-		task :"#{feature}" => 'ci:setup:rspec'
-
 		# Create individual rake tasks, for example: selenium:firefly:uptime
 		namespace :"#{feature}" do
 			tests = Dir["#{root_dir}/#{feature}/*_spec.rb"]
 
 			tests.each do |test|
-				test = test.match(/selenium_tests\/specs\/#{feature}\/(\w*)_spec.rb\z/)[1]
-				RSpec::Core::RakeTask.new(:"#{test}") do |t|
-					t.pattern = "#{root_dir}/#{feature}/#{test}_spec.rb"
-				end
+				file = File.read(test)
+				describe_text = file.match(/describe "(.*)",/)[1]
+				test_name = test.match(/selenium_tests\/specs\/#{feature}\/(\w*)_spec.rb\z/)[1]
 
-				task "#{test}" => 'ci:setup:rspec'
+				desc "#{feature} - #{describe_text}"
+				RSpec::Core::RakeTask.new(:"#{test_name}", :job_guid) do |t, task_args|
+					t.pattern = "#{root_dir}/#{feature}/#{test_name}_spec.rb"
+					t.rspec_opts ="--format CustomFormatter > selenium_tests/reports/#{task_args[:job_guid]}.json"
+				end
 			end
 		end
 	end

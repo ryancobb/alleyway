@@ -13,7 +13,7 @@ RSpec.configure do |config|
 	config.failure_exit_code = 0
 
 	config.after(:suite) do
-		puts "Environment: QA, Browser: Chrome"
+		# puts "Environment: QA, Browser: Chrome"
 	end
 end
 
