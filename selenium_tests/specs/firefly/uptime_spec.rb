@@ -1,9 +1,11 @@
 require_relative '../spec_helper'
 
 describe "uptime verification", :type => :feature do
+  let(:base_url) { ::Alleyway.get_service_url("firefly") }
 
   it "go to pinkbike" do
-  	visit 'http://www.pinkbike.com'
+  	visit base_url
+    sleep(5)
   end
 
   it "errors terribly" do

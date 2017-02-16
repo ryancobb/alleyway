@@ -1,0 +1,1 @@
+require 'alleyway/service_urls'

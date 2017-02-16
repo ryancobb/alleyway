@@ -22,13 +22,13 @@ class RakeHelper
 	end
 
 	def self.run(job)
-		Thread.new() {
+		# Thread.new {
 			job.update(:status => "running")
 			%x[BROWSER=#{job.browser} ENVIRONMENT=#{job.environment} rake #{job.commands}]
 			job.update(:status => "building report")
 			report = ::ReportProcessor::Report.new(job)
 			job.update(:response => report.response, :status => "complete")
-		}
+		# }
 	end
 
 	def self.get_commands
