@@ -24,7 +24,7 @@ class RakeHelper
 	def self.run(job)
 		# Thread.new {
 			job.update(:status => "running")
-			%x[BROWSER=#{job.browser} ENVIRONMENT=#{job.environment} rake #{job.commands}]
+			%x[rake #{job.commands}]
 			job.update(:status => "building report")
 			report = ::ReportProcessor::Report.new(job)
 			job.update(:response => report.response, :status => "complete")
@@ -33,7 +33,7 @@ class RakeHelper
 
 	def self.get_commands
 		%x[rake -T | sed -n '/selenium:/{/grep/!p;}' | awk '{print$2}'].gsub(/selenium:/, "")
-			.gsub(/\[job_guid\]/, "").split("\n")
+			.gsub(/\[job_guid,browser,environment\]/, "").split("\n")
 	end
 
 	def self.get_descriptions

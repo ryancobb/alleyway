@@ -21,9 +21,13 @@ namespace :selenium do
 				test_name = test.match(/selenium_tests\/specs\/#{feature}\/(\w*)_spec.rb\z/)[1]
 
 				desc "#{describe_text}"
-				RSpec::Core::RakeTask.new(:"#{test_name}", :job_guid) do |t, task_args|
+				RSpec::Core::RakeTask.new(:"#{test_name}", [:job_guid, :browser, :environment]) do |t, task_args|
+					options = "BROWSER = '#{task_args[:browser]}' \nENVIRONMENT = '#{task_args[:environment]}'"
+
+					File.write("selenium_tests/reports/config/#{task_args[:job_guid]}.rb", options)
+
 					t.pattern = "#{root_dir}/#{feature}/#{test_name}_spec.rb"
-					t.rspec_opts ="--format CustomFormatter > selenium_tests/reports/#{task_args[:job_guid]}.json"
+					t.rspec_opts ="--format CustomFormatter > selenium_tests/reports/#{task_args[:job_guid]}.json --require ./selenium_tests/reports/config/#{task_args[:job_guid]}.rb"
 				end
 			end
 		end

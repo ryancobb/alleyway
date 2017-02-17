@@ -3,7 +3,7 @@ class SeleniumController < ApplicationController
 
   def run
   	job_guid = SecureRandom.uuid
-  	commands = build_tasks(selenium_params[:spec], job_guid)
+  	commands = Job.build_commands(selenium_params[:spec], job_guid, selenium_params[:browser], selenium_params[:environment])
   
   	job = Job.create(:guid => job_guid, :status => "initiated", :commands => commands, 
       :environment => selenium_params[:environment], :browser => selenium_params[:browser])
@@ -25,13 +25,6 @@ class SeleniumController < ApplicationController
 
   def selenium_params
     params.require(:selenium).permit(:environment, :browser, :spec => [])
-  end
-
-  def build_tasks(tasks, job_guid)
-  	built_tasks = tasks.each_with_index.map do |task, index|
-  		"selenium:#{task}[#{job_guid}.#{index}]"
-  	end
-  	built_tasks.join(" ")
   end
 
   def valid_specs?

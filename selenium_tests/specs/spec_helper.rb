@@ -4,7 +4,7 @@ require 'alleyway'
 Capybara.register_driver :selenium do |app|
 	Capybara::Selenium::Driver.new(app, 
 		:browser => :remote,
-		:desired_capabilities => ENV['BROWSER'].to_sym,
+		:desired_capabilities => BROWSER.to_sym,
 		:url => "http://localhost:4444/wd/hub"
 		)
 end
