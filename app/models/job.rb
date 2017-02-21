@@ -7,4 +7,15 @@ class Job < ApplicationRecord
 		built_commands.join(" ")
 	end
 
+	def cleanup
+		files = Dir.glob("#{APP_CONFIG["reports_path"]}/#{guid}.*.{rb,json}")
+		files.each { |file| File.delete(file) }
+	end
+
+	def send_response
+		::HTTParty.post("#{APP_CONFIG["frontage_url"]}/jobs", 
+			:body => { :job_guid => guid, :results => response }.to_json,
+			:headers => { 'Content-Type' => 'application/json' })
+	end
+
 end

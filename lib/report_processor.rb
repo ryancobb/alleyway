@@ -15,16 +15,12 @@ module ReportProcessor
 				response.push JSON.parse(File.read(file))
 			end
 
-			{
-				job.guid => response
-			}.to_json
+			response
 		end
 
 		def get_files(job)
 			Dir["selenium_tests/reports/#{job.guid}.*.json"]
 		end
-
-		def get_metadata(file)
-		end
+		
 	end
 end

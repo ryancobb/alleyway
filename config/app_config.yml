@@ -1,0 +1,13 @@
+defaults: &defaults
+  reports_path: selenium_tests/reports
+  selenium_hub_url: http://localhost:4444/wd/hub
+  frontage_url: "http://localhost:3001"
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults

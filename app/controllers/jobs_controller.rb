@@ -7,7 +7,11 @@ class JobsController < ApplicationController
 
   private
 
+  def job_params
+  	params.require(:job_guid)
+  end
+
   def find_job
-  	Job.find_by(:guid => params[:job_guid])
+  	Job.find_by(:guid => job_params[:job_guid])
   end
 end

@@ -2,10 +2,9 @@ class SeleniumController < ApplicationController
 	before_action :valid_specs?, :only => :run
 
   def run
-  	job_guid = SecureRandom.uuid
-  	commands = Job.build_commands(selenium_params[:spec], job_guid, selenium_params[:browser], selenium_params[:environment])
+  	commands = Job.build_commands(selenium_params[:spec], selenium_params[:job_guid], selenium_params[:browser], selenium_params[:environment])
   
-  	job = Job.create(:guid => job_guid, :status => "initiated", :commands => commands, 
+  	job = Job.create(:guid => selenium_params[:job_guid], :status => "initiated", :commands => commands, 
       :environment => selenium_params[:environment], :browser => selenium_params[:browser])
 
   	::RakeHelper.run(job)
@@ -13,7 +12,6 @@ class SeleniumController < ApplicationController
 		render json: {
 			:guid => job.guid,
 			:status => job.status,
-			:commands => job.commands
 		}
   end
 
@@ -24,7 +22,7 @@ class SeleniumController < ApplicationController
   private
 
   def selenium_params
-    params.require(:selenium).permit(:environment, :browser, :spec => [])
+    params.require(:selenium).permit(:environment, :browser, :job_guid, :spec => [])
   end
 
   def valid_specs?

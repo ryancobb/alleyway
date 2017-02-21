@@ -11,6 +11,7 @@ gem 'rspec'
 gem 'ci_reporter_rspec'
 gem 'nokogiri'
 gem 'listen'
+gem 'httparty'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.1'

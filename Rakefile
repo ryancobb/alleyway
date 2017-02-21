@@ -24,10 +24,10 @@ namespace :selenium do
 				RSpec::Core::RakeTask.new(:"#{test_name}", [:job_guid, :browser, :environment]) do |t, task_args|
 					options = "BROWSER = '#{task_args[:browser]}' \nENVIRONMENT = '#{task_args[:environment]}'"
 
-					File.write("selenium_tests/reports/config/#{task_args[:job_guid]}.rb", options)
+					File.write("selenium_tests/reports/#{task_args[:job_guid]}.rb", options)
 
 					t.pattern = "#{root_dir}/#{feature}/#{test_name}_spec.rb"
-					t.rspec_opts ="--format CustomFormatter > selenium_tests/reports/#{task_args[:job_guid]}.json --require ./selenium_tests/reports/config/#{task_args[:job_guid]}.rb"
+					t.rspec_opts ="--format CustomFormatter > selenium_tests/reports/#{task_args[:job_guid]}.json --require ./selenium_tests/reports/#{task_args[:job_guid]}.rb"
 				end
 			end
 		end

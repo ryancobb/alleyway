@@ -22,13 +22,18 @@ class RakeHelper
 	end
 
 	def self.run(job)
-		# Thread.new {
+	 Thread.new {
+	 	begin
 			job.update(:status => "running")
 			%x[rake #{job.commands}]
 			job.update(:status => "building report")
 			report = ::ReportProcessor::Report.new(job)
 			job.update(:response => report.response, :status => "complete")
-		# }
+			job.send_response
+		ensure
+			job.cleanup
+		end
+		}
 	end
 
 	def self.get_commands
@@ -39,6 +44,5 @@ class RakeHelper
 	def self.get_descriptions
 		%x[rake -T | sed -n '/selenium:/{/grep/!p;}' | awk '{$1=$2=$3=""; print $0}'].split("\n")
   		.each(&:lstrip!)
-  	end
-
+	end
 end

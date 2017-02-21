@@ -6,8 +6,8 @@ class CustomFormatter < RSpec::Core::Formatters::JsonFormatter
 	def initialize(output)
 		super(output)
 		@output_hash = {
-			:browser => ENV["BROWSER"],
-			:environment => ENV["ENVIRONMENT"],
+			:browser => BROWSER,
+			:environment => ENVIRONMENT,
 		}
 	end
 
